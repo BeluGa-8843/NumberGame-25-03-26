@@ -6,13 +6,16 @@
     margin-top: 10px;
     width: 110px;
     height: 20px;
-    background-color: grey;
+    background-color: #1e293b;
+    border-radius: 10px;
 }
-
 .Bar{
     width: 0%;
     height: 100%;
-    background-color: green;
+    background-color: #4ade80;
+    border-radius: 10px;
+    box-shadow: 0 0 5px #4ade80;    
+
 }
 .animate-run {
     animation: fillBar 1s linear infinite;
@@ -23,18 +26,23 @@
     to { width: 100%; }
 }
 
-
-body{
+html, body {
     margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb(42, 42, 42);  
-    box-shadow:inset 0px 0px 20px 15px #38bdf8;
-    color: #f8fafc;
+    padding: 0;
+    overflow: hidden;
     height: 100vh;
     width: 100vw;
 }
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0px 0px 20px 15px #38bdf8;
+    color: #f8fafc;
+    user-select: none;
+}
+
 h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
 .cross{
     position: relative;
@@ -74,11 +82,28 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
     width: 30vh;
 }
 #AutomationPart{
+    width: 30vh;
     grid-area: 3 / 2;
 }
-#MoneyDisplay{grid-area: 1 / 2;font-family: "Orbitron", sans-serif;}
-#AdditionCost, #MultiplicationCost, #AutomationCost, #AdditionLvl, #MultiplierLvl, #AutomationLvl{font-family: "JetBrains Mono", monospace;}
+#MoneyDisplay{
+    grid-area: 1 / 2;
+    font-family: "Orbitron", sans-serif;
+    width: 30vh;
+    display: flex;
+    justify-content: center;
+}
+#AdditionCost, #MultiplierCost, #AutomationCost, #AdditionLvl, #MultiplierLvl, #AutomationLvl{font-family: "JetBrains Mono", monospace;}
 
+#AdditionCost, #MultiplierCost, #AutomationCost{
+    color: #fb923c;
+    text-shadow: 0 0 2px #fb923c;
+}
+
+#AdditionLvl, #MultiplierLvl, #AutomationLvl{
+    color:#38bdf8;
+    text-shadow: 0 0 5px #38bdf8;
+    text-shadow: inset 0 0 5px #38bdf8;
+}
 #button{
     display: flex;
     justify-content: center;
@@ -86,32 +111,41 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
     grid-area: 2 / 2;
     border-radius:50%;
     cursor: pointer;
-
 }
 
-#IncrementalValue{
-    
+#button:hover{
+    box-shadow: 0 0 10px 10px #38bdf8;
+    transform: scale(0.95);
+}
+
+#button:active{
+    box-shadow: 0 0 20px 20px #38bdf8;
+    transform: scale(0.9);
+}
+
+#IncrementalValue{   
     font-size: 40px;
     top: 40px;
     color: #f8fafc;
     text-shadow: 0 0 5px #38bdf8;
 }
 
-
-.ALL{
-     grid-template-rows: 1fr 1fr 1fr ;
+.ALL {
+    position: relative;
+    z-index: 1;
     display: grid;
-    grid-template-columns: auto auto auto;
-    justify-content: space-around;
-    align-items: center;  
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+    width: 100vw;
     height: 100vh;
-    width: 100vh;
+    box-sizing: border-box;
 }
 
 .StandardComponent{
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     width: 20vh;
     height: 20vh;
@@ -120,4 +154,44 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
     box-shadow:0 0 5px 1px #38bdf8,
     inset 0 0 5px 1px #38bdf8;
     border: solid 2px #38bdf8;
+    justify-self: center;
+    align-self: center;
+}
+
+.StandardComponent h1,
+.StandardComponent h3,
+.StandardComponent h4 {
+    margin: 0vh;
+}
+
+.StandardComponent button {
+    margin-top: 0.2vh;
+    padding: 0.5vh 1vh;
+    background-color: #38bdf8;
+    color: #1e293b;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: "Rajdhani", sans-serif;
+    box-shadow: 0 0 5px #38bdf8;
+    color: white;
+    font-size: 120%;
+    font-weight: bold;
+}
+
+.StandardComponent button:hover,.StandardComponent button.not-affordable:hover  {
+    background-color: #ef4444;
+    box-shadow: 0 0 40px #ef4444;
+    transform: scale(0.95);
+}
+
+.StandardComponent button.affordable:hover {
+    background-color: #4ade80;
+    box-shadow: 0 0 40px #4ade80;
+    transform: scale(0.95);
+}
+
+#MultiplicationUpgrade,#AdditionUpgrade{
+    margin-top: 15px;
+    padding: 10px;
 }

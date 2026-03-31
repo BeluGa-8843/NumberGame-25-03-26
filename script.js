@@ -17,23 +17,16 @@ const bar = document.querySelector('.Bar');
 
 var Money = 0;
 var MoneyMultiplier = 1;
-var AdditionCost = 10;
-var MultiplierCost = 1000;
+var AdditionCost = 15;
+var MultiplierCost = 500;
 var AdditionIncreaser = 1
 var AutoMoneyTimer = 1000;
-var AutoMoneyCost = 100;
+var AutoMoneyCost = 200;
 var AutoIncome = 0;
 
 button.addEventListener("click", () => {
     Money += MoneyMultiplier;
     UpdateUpgrades();
-});
-
-KeyboardEvents = document.addEventListener("keydown", (event) => {
-    if (event.code === "Space") {
-        Money += MoneyMultiplier;
-        UpdateUpgrades();
-    }
 });
 
 function UpdateUpgrades() {
@@ -43,7 +36,31 @@ function UpdateUpgrades() {
     AdditionCostDisplay.innerText = `cost: ${formatNumber(AdditionCost)}`;
     AdditionUpgrade.textContent = `upgrade: +${formatNumber(AdditionIncreaser)}/click`;
     AutomationCostDisplay.innerText = `cost: ${formatNumber(AutoMoneyCost)}`;
-    AutomationUpgrade.textContent = `upgrade: +${formatNumber(AutoIncome)} /1s`;
+    AutomationUpgrade.textContent = `upgrade: +${formatNumber(AutoIncome)} /1s`;    
+    // Appliquer les classes pour les états hover
+    if (Money >= AdditionCost) {
+        AdditionUpgrade.classList.add('affordable');
+        AdditionUpgrade.classList.remove('not-affordable');
+    } else {
+        AdditionUpgrade.classList.add('not-affordable');
+        AdditionUpgrade.classList.remove('affordable');
+    }
+    
+    if (Money >= MultiplierCost) {
+        MultiplicationUpgrade.classList.add('affordable');
+        MultiplicationUpgrade.classList.remove('not-affordable');
+    } else {
+        MultiplicationUpgrade.classList.add('not-affordable');
+        MultiplicationUpgrade.classList.remove('affordable');
+    }
+    
+    if (Money >= AutoMoneyCost) {
+        AutomationUpgrade.classList.add('affordable');
+        AutomationUpgrade.classList.remove('not-affordable');
+    } else {
+        AutomationUpgrade.classList.add('not-affordable');
+        AutomationUpgrade.classList.remove('affordable');
+    }
 }
 
 const formatNumber = num => {
@@ -66,7 +83,7 @@ AdditionUpgrade.addEventListener("click", () => {
     if (Money >= AdditionCost) {
         Money -= AdditionCost;
         MoneyMultiplier += AdditionIncreaser;
-        AdditionCost *= 1.5;
+        AdditionCost *= 1.6;
         UpdateUpgrades()
     }
 });
@@ -75,17 +92,17 @@ MultiplicationUpgrade.addEventListener("click", () => {
     if (Money >= MultiplierCost) {
         Money -= MultiplierCost;
         MoneyMultiplier *= 2;
-        MultiplierCost *= 10;
-        AdditionIncreaser *= 10;
+        MultiplierCost *= 5;
+        AdditionIncreaser *= 2;
         UpdateUpgrades()
-    } else { Money = 10 * 10000; UpdateUpgrades() }
+    }
 });
 
 AutomationUpgrade.addEventListener("click", () => {
     if (Money >= AutoMoneyCost) {
         Money -= AutoMoneyCost;
         AutoIncome += AdditionIncreaser;
-        AutoMoneyCost *= 1.2;
+        AutoMoneyCost *= 1.8;
         UpdateUpgrades();
     }
 });
@@ -99,3 +116,6 @@ AutoMoney = setInterval(() => {
     }
 }, AutoMoneyTimer);
 
+window.addEventListener('load ', () => {
+    UpdateUpgrades();
+});
