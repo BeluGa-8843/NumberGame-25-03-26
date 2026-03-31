@@ -39,7 +39,6 @@ body {
     justify-content: center;
     align-items: center;
     box-shadow: inset 0px 0px 20px 15px #38bdf8;
-    color: #f8fafc;
     user-select: none;
 }
 
@@ -76,13 +75,22 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
 #AdditionPart{
     grid-area: 2 / 1;
     width: 30vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 #MultiplicationPart{
     grid-area: 2 / 3;
     width: 30vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 #AutomationPart{
     width: 30vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     grid-area: 3 / 2;
 }
 #MoneyDisplay{
@@ -131,6 +139,7 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
 }
 
 .ALL {
+        color: #f8fafc;
     position: relative;
     z-index: 1;
     display: grid;

@@ -23,6 +23,9 @@ var AdditionIncreaser = 1
 var AutoMoneyTimer = 1000;
 var AutoMoneyCost = 200;
 var AutoIncome = 0;
+var AdditionLevel = 0;
+var MultiplierLevel = 0;
+var AutomationLevel = 0;
 
 button.addEventListener("click", () => {
     Money += MoneyMultiplier;
@@ -37,7 +40,9 @@ function UpdateUpgrades() {
     AdditionUpgrade.textContent = `upgrade: +${formatNumber(AdditionIncreaser)}/click`;
     AutomationCostDisplay.innerText = `cost: ${formatNumber(AutoMoneyCost)}`;
     AutomationUpgrade.textContent = `upgrade: +${formatNumber(AutoIncome)} /1s`;    
-    // Appliquer les classes pour les états hover
+    AdditionLvl.innerText = `lvl ${AdditionLevel}`;
+    MultiplierLvl.innerText = `lvl ${MultiplierLevel}`;
+    AutomationLvl.innerText = `lvl ${AutomationLevel}`;
     if (Money >= AdditionCost) {
         AdditionUpgrade.classList.add('affordable');
         AdditionUpgrade.classList.remove('not-affordable');
@@ -84,6 +89,7 @@ AdditionUpgrade.addEventListener("click", () => {
         Money -= AdditionCost;
         MoneyMultiplier += AdditionIncreaser;
         AdditionCost *= 1.6;
+        AdditionLevel++;
         UpdateUpgrades()
     }
 });
@@ -94,6 +100,7 @@ MultiplicationUpgrade.addEventListener("click", () => {
         MoneyMultiplier *= 2;
         MultiplierCost *= 5;
         AdditionIncreaser *= 2;
+        MultiplierLevel++;
         UpdateUpgrades()
     }
 });
@@ -103,6 +110,7 @@ AutomationUpgrade.addEventListener("click", () => {
         Money -= AutoMoneyCost;
         AutoIncome += AdditionIncreaser;
         AutoMoneyCost *= 1.8;
+        AutomationLevel++;
         UpdateUpgrades();
     }
 });
