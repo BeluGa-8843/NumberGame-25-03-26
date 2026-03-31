@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Orbitron:wght@400..900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+.BarContainer{
+    margin-top: 10px;
+    width: 110px;
+    height: 20px;
+    background-color: grey;
+}
+
+.Bar{
+    width: 0%;
+    height: 100%;
+    background-color: green;
+}
+.animate-run {
+    animation: fillBar 1s linear infinite;
+}
+
+@keyframes fillBar {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+
+body{
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(42, 42, 42);  
+    box-shadow:inset 0px 0px 20px 15px #38bdf8;
+    color: #f8fafc;
+    height: 100vh;
+    width: 100vw;
+}
+h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
+.cross{
+    position: relative;
+    width: 60px;  /* Taille de la zone de la croix */
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.cross::before, .cross::after {
+    content: "";
+    position: absolute;
+    background-color: #38bdf8; /* Couleur bleue comme ton thème */
+    box-shadow: 0 0 10px #38bdf8; /* Effet néon */
+    border-radius: 2px;
+}
+.cross::before {
+    width: 100%;
+    height: 6px;
+}
+.cross::after {
+    width: 6px;
+    height: 100%;
+}
+
+.Alined{
+    display: flex;
+    justify-content: space-between;
+}
+
+#AdditionPart{
+    grid-area: 2 / 1;
+    width: 30vh;
+}
+#MultiplicationPart{
+    grid-area: 2 / 3;
+    width: 30vh;
+}
+#AutomationPart{
+    grid-area: 3 / 2;
+}
+#MoneyDisplay{grid-area: 1 / 2;font-family: "Orbitron", sans-serif;}
+#AdditionCost, #MultiplicationCost, #AutomationCost, #AdditionLvl, #MultiplierLvl, #AutomationLvl{font-family: "JetBrains Mono", monospace;}
+
+#button{
+    display: flex;
+    justify-content: center;
+    width: 20vh;
+    grid-area: 2 / 2;
+    border-radius:50%;
+    cursor: pointer;
+
+}
+
+#IncrementalValue{
+    
+    font-size: 40px;
+    top: 40px;
+    color: #f8fafc;
+    text-shadow: 0 0 5px #38bdf8;
+}
+
+
+.ALL{
+     grid-template-rows: 1fr 1fr 1fr ;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    justify-content: space-around;
+    align-items: center;  
+    height: 100vh;
+    width: 100vh;
+}
+
+.StandardComponent{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 20vh;
+    height: 20vh;
+    border-radius:  20px; ;
+    background-color: #1e293b;
+    box-shadow:0 0 5px 1px #38bdf8,
+    inset 0 0 5px 1px #38bdf8;
+    border: solid 2px #38bdf8;
+}
