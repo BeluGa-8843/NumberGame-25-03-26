@@ -46,7 +46,7 @@ function saveGame() {
 
 function loadGame() {
     const savedData = JSON.parse(localStorage.getItem('clickerSaveData'));
-    
+
     // Si une sauvegarde existe, on met à jour les variables
     if (savedData !== null) {
         if (typeof savedData.Money !== 'undefined') Money = savedData.Money;
@@ -60,7 +60,7 @@ function loadGame() {
         if (typeof savedData.MultiplierLevel !== 'undefined') MultiplierLevel = savedData.MultiplierLevel;
         if (typeof savedData.AutomationLevel !== 'undefined') AutomationLevel = savedData.AutomationLevel;
     }
-    
+
     UpdateUpgrades();
 }
 
@@ -79,11 +79,11 @@ function UpdateUpgrades() {
     AdditionCostDisplay.innerText = `cost: ${formatNumber(AdditionCost)}`;
     AdditionUpgrade.textContent = `upgrade: +${formatNumber(AdditionIncreaser)}/click`;
     AutomationCostDisplay.innerText = `cost: ${formatNumber(AutoMoneyCost)}`;
-    AutomationUpgrade.textContent = `upgrade: +${formatNumber(AutoIncome)} /1s`;    
+    AutomationUpgrade.textContent = `upgrade: +${formatNumber(AutoIncome)} /1s`;
     AdditionLvl.innerText = `lvl ${AdditionLevel}`;
     MultiplierLvl.innerText = `lvl ${MultiplierLevel}`;
     AutomationLvl.innerText = `lvl ${AutomationLevel}`;
-    
+
     if (Money >= AdditionCost) {
         AdditionUpgrade.classList.add('affordable');
         AdditionUpgrade.classList.remove('not-affordable');
@@ -91,7 +91,7 @@ function UpdateUpgrades() {
         AdditionUpgrade.classList.add('not-affordable');
         AdditionUpgrade.classList.remove('affordable');
     }
-    
+
     if (Money >= MultiplierCost) {
         MultiplicationUpgrade.classList.add('affordable');
         MultiplicationUpgrade.classList.remove('not-affordable');
@@ -99,7 +99,7 @@ function UpdateUpgrades() {
         MultiplicationUpgrade.classList.add('not-affordable');
         MultiplicationUpgrade.classList.remove('affordable');
     }
-    
+
     if (Money >= AutoMoneyCost) {
         AutomationUpgrade.classList.add('affordable');
         AutomationUpgrade.classList.remove('not-affordable');
@@ -186,9 +186,12 @@ document.addEventListener("visibilitychange", () => {
     }
 });
 
-ResetGame.addEventListener('click', () => {
 const ResetGame = document.getElementById('ResetGame');
-localStorage.removeItem('clickerSaveData');
+
+ResetGame.addEventListener('click', () => {
+    sur = confirm("Êtes-vous sûr de vouloir réinitialiser le jeu ? Cette action est irréversible.");
+    if (sur) {
+        localStorage.removeItem('clickerSaveData');
         Money = 0;
         MoneyMultiplier = 1;
         AdditionCost = 15;
@@ -201,5 +204,5 @@ localStorage.removeItem('clickerSaveData');
         AutomationLevel = 0;
         UpdateUpgrades();
         saveGame();
-        alert("Le jeu a été réinitialisé avec succès !");
+    }
 });
