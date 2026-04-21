@@ -66,10 +66,53 @@ function loadGame() {
 
 // --- FIN DU SYSTÈME DE SAUVEGARDE ---
 
-button.addEventListener("click", () => {
+// On crée une variable globale pour stocker notre chronomètre
+let timerPressionBouton; 
+
+button.addEventListener("click", (e) => {
     Money += MoneyMultiplier;
     UpdateUpgrades();
-    saveGame(); // Sauvegarde immédiate après chaque clic
+    
+    // 1. Gestion de l'état enfoncé (sans clignotement)
+    button.classList.add('is-clicked');
+    clearTimeout(timerPressionBouton);
+    timerPressionBouton = setTimeout(() => {
+        button.classList.remove('is-clicked');
+    }, 150); 
+
+    // 2. Coordonnées de la souris
+    const rect = button.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+
+    // --- NOUVEAU : Appel de la fonction pour le clic manuel ---
+    afficherGainFlottant(MoneyMultiplier, clickX, clickY);
+
+    // 4. Génération des Particules
+    const nbParticules = 15;
+    const couleurs = ['#38bdf8', '#e0f2fe', '#0ea5e9', '#0369a1'];
+
+    for (let i = 0; i < nbParticules; i++) {
+        const particule = document.createElement('span');
+        particule.classList.add('particule');
+        
+        particule.style.left = `${clickX}px`;
+        particule.style.top = `${clickY}px`;
+        
+        const x = (Math.random() - 0.5) * 180;
+        const y = (Math.random() - 0.5) * 180;
+        
+        particule.style.setProperty('--x', `${x}px`);
+        particule.style.setProperty('--y', `${y}px`);
+        
+        const couleurAleatoire = couleurs[Math.floor(Math.random() * couleurs.length)];
+        particule.style.backgroundColor = couleurAleatoire;
+        particule.style.boxShadow = `0 0 10px ${couleurAleatoire}`;
+        
+        button.appendChild(particule);
+        
+        setTimeout(() => { particule.remove(); }, 600);
+    }
 });
 
 function UpdateUpgrades() {
@@ -132,7 +175,10 @@ AdditionUpgrade.addEventListener("click", () => {
         AdditionCost *= 1.6;
         AdditionLevel++;
         UpdateUpgrades();
-        saveGame(); // Sauvegarde immédiate après un achat
+        saveGame(); 
+    } else {
+        // L'argent est insuffisant, on fait trembler le bouton
+        shakeBouton(AdditionUpgrade);
     }
 });
 
@@ -144,7 +190,10 @@ MultiplicationUpgrade.addEventListener("click", () => {
         AdditionIncreaser *= 2;
         MultiplierLevel++;
         UpdateUpgrades();
-        saveGame(); // Sauvegarde immédiate après un achat
+        saveGame(); 
+    } else {
+        // L'argent est insuffisant, on fait trembler le bouton
+        shakeBouton(MultiplicationUpgrade);
     }
 });
 
@@ -155,7 +204,10 @@ AutomationUpgrade.addEventListener("click", () => {
         AutoMoneyCost *= 1.8;
         AutomationLevel++;
         UpdateUpgrades();
-        saveGame(); // Sauvegarde immédiate après un achat
+        saveGame(); 
+    } else {
+        // L'argent est insuffisant, on fait trembler le bouton
+        shakeBouton(AutomationUpgrade);
     }
 });
 
@@ -163,9 +215,15 @@ let AutoMoney = setInterval(() => {
     if (AutoIncome > 0) {
         Money += AutoIncome;
         UpdateUpgrades();
-        saveGame(); // Sauvegarde immédiate après l'ajout d'argent automatique
-        // console.log("AutoMoney: " + formatNumber(AutoIncome));
+        saveGame(); 
+        
         if (bar) bar.classList.add('animate-run');
+
+        // --- NOUVEAU : Calcul du centre du bouton et affichage du gain ---
+        const centreX = button.clientWidth / 2;
+        const centreY = button.clientHeight / 2;
+        
+        afficherGainFlottant(AutoIncome, centreX, centreY);
     }
 }, AutoMoneyTimer);
 
@@ -204,7 +262,39 @@ ResetGame.addEventListener('click', () => {
         AutomationLevel = 0;
         UpdateUpgrades();
         saveGame();
+        bar.classList.remove('animate-run')
     }
 });
 
-//test
+// --- CRÉATION DU TEXTE FLOTTANT (+X) ---
+    // Fonction pour créer l'animation du texte (+X)
+function afficherGainFlottant(montant, x, y) {
+    const floatingText = document.createElement('div');
+    floatingText.classList.add('floating-text');
+    floatingText.innerText = `+${formatNumber(montant)}`;
+    
+    // Décalage aléatoire pour que les textes ne s'empilent pas exactement au même endroit
+    const decalageX = (Math.random() - 0.5) * 40;
+    const decalageY = (Math.random() - 0.5) * 20; 
+    
+    floatingText.style.left = `${x + decalageX}px`;
+    floatingText.style.top = `${y + decalageY}px`;
+    
+    button.appendChild(floatingText);
+    
+    setTimeout(() => {
+        floatingText.remove();
+    }, 800);
+}
+    // Fonction pour faire trembler un élément
+function shakeBouton(bouton) {
+    // On enlève la classe d'abord au cas où le joueur clique très vite plusieurs fois
+    bouton.classList.remove('shake-error');
+    
+    // Petite astuce technique : forcer le navigateur à "lire" la largeur de l'élément 
+    // permet de réinitialiser l'animation CSS immédiatement
+    void bouton.offsetWidth; 
+    
+    // On ajoute la classe pour lancer l'animation
+    bouton.classList.add('shake-error');
+}

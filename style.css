@@ -108,7 +108,8 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
     text-shadow: 0 0 5px #38bdf8;
     text-shadow: inset 0 0 5px #38bdf8;
 }
-#button{
+#button {
+    position: relative; /* <-- C'est la ligne magique qui règle le bug ! */
     display: flex;
     justify-content: center;
     width: 20vh;
@@ -122,7 +123,9 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
     transform: scale(0.95);
 }
 
-#button:active{
+/* On regroupe le :active et notre nouvelle classe */
+#button:active,
+#button.is-clicked {
     box-shadow: 0 0 20px 20px #38bdf8;
     transform: scale(0.9);
 }
@@ -230,4 +233,77 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
     background-color: #ef4444;
     box-shadow: 0 0 40px #ef4444;
     transform: scale(0.95);
+}
+
+/* Style des particules */
+.particule {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  background-color: #38bdf8; /* Couleur par défaut (jaune/orange) */
+  border-radius: 50%; /* Pour avoir des ronds */
+  pointer-events: none; /* Pour ne pas bloquer les clics suivants */
+  transform: translate(-50%, -50%); /* Centrage */
+  
+  /* L'animation utilise les variables CSS générées en JS */
+  animation: explosion 0.6s ease-out forwards;
+  pointer-events: none; /* Indispensable pour ne pas gêner les clics */
+    z-index: 10;
+    mix-blend-mode: screen; /* Rend les couleurs plus lumineuses sur fond sombre */
+}
+
+/* Animation clé : la particule part du centre vers les coordonnées --x et --y, en rétrécissant */
+@keyframes explosion {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Style du texte de gain (+X) */
+.floating-text {
+    position: absolute;
+    color: #ffffff; /* Vert pour l'argent */
+    font-family: "Orbitron", sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 0 8px 8px #38bdf8; /* Lueur néon */
+    pointer-events: none; /* Crucial : empêche le texte de bloquer les clics suivants */
+    z-index: 20; /* S'affiche au-dessus du bouton et des particules */
+    
+    /* Animation de 0.8 seconde */
+    animation: floatUp 0.8s ease-out forwards;
+}
+
+/* L'animation : le texte monte et devient transparent */
+@keyframes floatUp {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        /* On le fait monter de 60px (le -60px sur l'axe Y) et grossir un peu */
+        transform: translate(-50%, calc(-50% - 60px)) scale(1.2);
+        opacity: 0.5;
+    }
+}
+
+/* La classe qui sera ajoutée temporairement par le JS */
+.shake-error {
+    animation: shake 0.3s ease-in-out;
+}
+
+/* L'animation de tremblement (de gauche à droite) */
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    50% { transform: translateX(6px); }
+    75% { transform: translateX(-6px); }
+    100% { transform: translateX(0); }
 }
