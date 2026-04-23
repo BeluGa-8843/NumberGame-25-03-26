@@ -10,6 +10,9 @@ const AutomationCostDisplay = document.getElementById("AutomationCost");
 const AdditionLvl = document.getElementById("AdditionLvl");
 const MultiplierLvl = document.getElementById("MultiplierLvl");
 const AutomationLvl = document.getElementById("AutomationLvl");
+const TotalMoney = document.getElementById('TotalMoney');
+const TotalClicks = document.getElementById('TotalClicks');
+const TotalPlayTime = document.getElementById('TotalPlayTime');
 
 const bar = document.querySelector('.Bar');
 
@@ -24,6 +27,10 @@ var AutoIncome = 0;
 var AdditionLevel = 0;
 var MultiplierLevel = 0;
 var AutomationLevel = 0;
+var TotalMoneyEarned = 0;
+var TotalClicksCount = 0;
+var TotalTimePlayed = 0;
+
 
 // --- SYSTÈME DE SAUVEGARDE ET CHARGEMENT ---
 
@@ -38,7 +45,10 @@ function saveGame() {
         AutoIncome: AutoIncome,
         AdditionLevel: AdditionLevel,
         MultiplierLevel: MultiplierLevel,
-        AutomationLevel: AutomationLevel
+        AutomationLevel: AutomationLevel,
+        TotalClicksCount: TotalClicksCount,
+        TotalMoneyEarned: TotalMoneyEarned,
+        TotalTimePlayed: TotalTimePlayed
     };
     // On convertit l'objet en chaîne de caractères JSON pour le localStorage
     localStorage.setItem('clickerSaveData', JSON.stringify(gameData));
@@ -71,8 +81,9 @@ let timerPressionBouton;
 
 button.addEventListener("click", (e) => {
     Money += MoneyMultiplier;
+    TotalMoneyEarned += MoneyMultiplier;
     UpdateUpgrades();
-    
+    TotalClicksCount++;
     // 1. Gestion de l'état enfoncé (sans clignotement)
     button.classList.add('is-clicked');
     clearTimeout(timerPressionBouton);
@@ -116,6 +127,9 @@ button.addEventListener("click", (e) => {
 });
 
 function UpdateUpgrades() {
+    TotalMoney.innerText = `Total Money: ${formatNumber(TotalMoneyEarned)}`;
+    TotalClicks.innerText = `Total Clicks: ${formatNumber(TotalClicksCount)}`;
+    TotalPlayTime.innerText = `Total Play Time: ${formatNumber(TotalTimePlayed)}s`;
     MoneyDisplay.innerText = formatNumber(Money);
     IncrementalValue.innerText = `+${formatNumber(MoneyMultiplier)}`;
     MultiplierCostDisplay.innerText = `cost: ${formatNumber(MultiplierCost)}`;
@@ -192,8 +206,7 @@ MultiplicationUpgrade.addEventListener("click", () => {
         UpdateUpgrades();
         saveGame(); 
     } else {
-        // L'argent est insuffisant, on fait trembler le bouton
-        shakeBouton(MultiplicationUpgrade);
+        shakeBouton(MultiplicationUpgrade);// L'argent est insuffisant, on fait trembler le bouton
     }
 });
 
@@ -206,13 +219,13 @@ AutomationUpgrade.addEventListener("click", () => {
         UpdateUpgrades();
         saveGame(); 
     } else {
-        // L'argent est insuffisant, on fait trembler le bouton
-        shakeBouton(AutomationUpgrade);
+        shakeBouton(AutomationUpgrade); // L'argent est insuffisant, on fait trembler le bouton
     }
 });
 
 let AutoMoney = setInterval(() => {
     if (AutoIncome > 0) {
+        TotalMoneyEarned += AutoIncome;
         Money += AutoIncome;
         UpdateUpgrades();
         saveGame(); 
@@ -227,29 +240,27 @@ let AutoMoney = setInterval(() => {
     }
 }, AutoMoneyTimer);
 
-// Correction de 'load ' (espace en trop) en 'load'
 window.addEventListener('load', () => {
     loadGame(); // Charge les données sauvegardées dès le lancement
 });
 
-// 1. Sauvegarde quand l'utilisateur rafraîchit ou ferme l'onglet (Principalement PC)
 window.addEventListener("beforeunload", () => {
     saveGame();
 });
 
-// 2. Sauvegarde quand la page passe en arrière-plan (Sécurité pour Mobile/Tablette)
 document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === 'hidden') {
         saveGame();
     }
 });
-
 const ResetGame = document.getElementById('ResetGame');
-
 ResetGame.addEventListener('click', () => {
     sur = confirm("Êtes-vous sûr de vouloir réinitialiser le jeu ? Cette action est irréversible.");
     if (sur) {
         localStorage.removeItem('clickerSaveData');
+        TotalClicksCount = 0;
+        TotalMoneyEarned = 0;
+        TotalTimePlayed = 0;
         Money = 0;
         MoneyMultiplier = 1;
         AdditionCost = 15;
@@ -265,14 +276,12 @@ ResetGame.addEventListener('click', () => {
         bar.classList.remove('animate-run')
     }
 });
-
 // --- CRÉATION DU TEXTE FLOTTANT (+X) ---
     // Fonction pour créer l'animation du texte (+X)
 function afficherGainFlottant(montant, x, y) {
     const floatingText = document.createElement('div');
     floatingText.classList.add('floating-text');
     floatingText.innerText = `+${formatNumber(montant)}`;
-    
     // Décalage aléatoire pour que les textes ne s'empilent pas exactement au même endroit
     const decalageX = (Math.random() - 0.5) * 40;
     const decalageY = (Math.random() - 0.5) * 20; 
@@ -288,13 +297,28 @@ function afficherGainFlottant(montant, x, y) {
 }
     // Fonction pour faire trembler un élément
 function shakeBouton(bouton) {
-    // On enlève la classe d'abord au cas où le joueur clique très vite plusieurs fois
     bouton.classList.remove('shake-error');
-    
-    // Petite astuce technique : forcer le navigateur à "lire" la largeur de l'élément 
-    // permet de réinitialiser l'animation CSS immédiatement
     void bouton.offsetWidth; 
-    
-    // On ajoute la classe pour lancer l'animation
     bouton.classList.add('shake-error');
 }
+
+const statMenu = document.getElementById('statMenu');
+const statDisplay = document.querySelector('.StatDisplay');
+const gameContent = document.getElementById('gameContent'); // On cible le wrapper
+
+statMenu.addEventListener('click', () => {
+    const isVisible = statDisplay.style.visibility === 'visible';
+    if (isVisible) {
+        statDisplay.style.visibility = 'hidden';
+        gameContent.classList.remove('blurred'); // On retire le flou sur le wrapper
+    } else {
+        statDisplay.style.visibility = 'visible';
+        gameContent.classList.add('blurred');    // On ajoute le flou sur le wrapper
+    }
+});
+
+let timerPlayTime = setInterval(() => {
+    TotalTimePlayed++;
+    UpdateUpgrades();
+    saveGame(); 
+}, 1000);

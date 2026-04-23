@@ -2,31 +2,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Orbitron:wght@400..900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
-.BarContainer{
+.BarContainer {
     margin-top: 10px;
     width: 110px;
     height: 20px;
     background-color: #1e293b;
     border-radius: 10px;
 }
-.Bar{
+
+.Bar {
     width: 0%;
     height: 100%;
     background-color: #4ade80;
     border-radius: 10px;
-    box-shadow: 0 0 5px #4ade80;    
+    box-shadow: 0 0 5px #4ade80;
 
 }
+
 .animate-run {
     animation: fillBar 1s linear infinite;
 }
 
 @keyframes fillBar {
-    from { width: 0%; }
-    to { width: 100%; }
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
 }
 
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -34,91 +42,121 @@ html, body {
     width: 100vw;
 }
 
-body {  
+body {
     user-select: none;
 }
 
-h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
-.cross{
+h1,
+h3,
+h4,
+button {
+    font-family: "Rajdhani", sans-serif;
+}
+
+.cross {
     position: relative;
-    width: 60px;  /* Taille de la zone de la croix */
+    width: 60px;
+    /* Taille de la zone de la croix */
     height: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.cross::before, .cross::after {
+
+.cross::before,
+.cross::after {
     content: "";
     position: absolute;
-    background-color: #38bdf8; /* Couleur bleue comme ton thème */
-    box-shadow: 0 0 10px #38bdf8; /* Effet néon */
+    background-color: #38bdf8;
+    /* Couleur bleue comme ton thème */
+    box-shadow: 0 0 10px #38bdf8;
+    /* Effet néon */
     border-radius: 2px;
 }
+
 .cross::before {
     width: 100%;
     height: 6px;
 }
+
 .cross::after {
     width: 6px;
     height: 100%;
 }
 
-.Alined{
+.Alined {
     display: flex;
     justify-content: space-between;
 }
 
-#AdditionPart{
+#AdditionPart {
     grid-area: 2 / 1;
     width: 30vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
-#MultiplicationPart{
+
+#MultiplicationPart {
     grid-area: 2 / 3;
     width: 30vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
-#AutomationPart{
+
+#AutomationPart {
     width: 30vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     grid-area: 3 / 2;
 }
-#MoneyDisplay{
+
+#MoneyDisplay {
     grid-area: 1 / 2;
     font-family: "Orbitron", sans-serif;
     width: 30vh;
     display: flex;
     justify-content: center;
 }
-#AdditionCost, #MultiplierCost, #AutomationCost, #AdditionLvl, #MultiplierLvl, #AutomationLvl{font-family: "JetBrains Mono", monospace;}
 
-#AdditionCost, #MultiplierCost, #AutomationCost{
+#AdditionCost,
+#MultiplierCost,
+#AutomationCost,
+#AdditionLvl,
+#MultiplierLvl,
+#AutomationLvl {
+    font-family: "JetBrains Mono", monospace;
+}
+
+#AdditionCost,
+#MultiplierCost,
+#AutomationCost {
     color: #fb923c;
     text-shadow: 0 0 2px #fb923c;
 }
 
-#AdditionLvl, #MultiplierLvl, #AutomationLvl{
-    color:#38bdf8;
+#AdditionLvl,
+#MultiplierLvl,
+#AutomationLvl {
+    color: #38bdf8;
     text-shadow: 0 0 5px #38bdf8;
     text-shadow: inset 0 0 5px #38bdf8;
 }
+
 #button {
-    position: relative; /* <-- C'est la ligne magique qui règle le bug ! */
+    position: relative;
+    /* <-- C'est la ligne magique qui règle le bug ! */
     display: flex;
     justify-content: center;
     width: 20vh;
     grid-area: 2 / 2;
-    border-radius:50%;
+    border-radius: 50%;
     cursor: pointer;
 }
 
-#button:hover{
+#button:hover {
     box-shadow: 0 0 10px 10px #38bdf8;
     transform: scale(0.95);
 }
@@ -130,7 +168,7 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
     transform: scale(0.9);
 }
 
-#IncrementalValue{   
+#IncrementalValue {
     font-size: 40px;
     top: 40px;
     color: #f8fafc;
@@ -151,16 +189,17 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
     box-sizing: border-box;
 }
 
-.StandardComponent{
+.StandardComponent {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 20vh;
     height: 20vh;
-    border-radius:  20px; ;
+    border-radius: 20px;
+    ;
     background-color: #1e293b;
-    box-shadow:0 0 5px 1px #38bdf8,
-    inset 0 0 5px 1px #38bdf8;
+    box-shadow: 0 0 5px 1px #38bdf8,
+        inset 0 0 5px 1px #38bdf8;
     border: solid 2px #38bdf8;
     justify-self: center;
     align-self: center;
@@ -187,7 +226,8 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
     font-weight: bold;
 }
 
-.StandardComponent button:hover,.StandardComponent button.not-affordable:hover  {
+.StandardComponent button:hover,
+.StandardComponent button.not-affordable:hover {
     background-color: #ef4444;
     box-shadow: 0 0 40px #ef4444;
     transform: scale(0.95);
@@ -199,12 +239,13 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
     transform: scale(0.95);
 }
 
-#MultiplicationUpgrade,#AdditionUpgrade{
+#MultiplicationUpgrade,
+#AdditionUpgrade {
     margin-top: 15px;
     padding: 10px;
 }
 
-.header{
+.header {
     position: absolute;
     background-color: #1e293b;
     filter: opacity(0.5);
@@ -213,8 +254,8 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
     margin-top: 10px;
 }
 
-#ResetGame{
-    position:absolute;
+#ResetGame {
+    position: absolute;
     background-color: #ef4444;
     color: white;
     border: none;
@@ -229,6 +270,41 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
     z-index: 2;
 }
 
+#statMenu {
+    position: absolute;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    right: 50px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: "Rajdhani", sans-serif;
+    box-shadow: 0 0 5px #ef4444;
+    font-size: 120%;
+    font-weight: bold;
+    fill-opacity: 1;
+    margin: 10px;
+    z-index: 2;
+}
+
+.StatDisplay {
+    position: absolute;
+    background-color: #1e293b;
+    color: #38bdf8;
+    border: solid 2px #38bdf8;
+    border-radius: 5px;
+    height: 20vh;
+    width: 20vw;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Rajdhani", sans-serif;
+    box-shadow: 0 0 5px 1px #38bdf8,
+        inset 0 0 5px 1px #38bdf8;
+    z-index: 2;
+    visibility: hidden;
+}
+
 #ResetGame:hover {
     background-color: #ef4444;
     box-shadow: 0 0 40px #ef4444;
@@ -237,46 +313,57 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
 
 /* Style des particules */
 .particule {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 16px;
-  height: 16px;
-  background-color: #38bdf8; /* Couleur par défaut (jaune/orange) */
-  border-radius: 50%; /* Pour avoir des ronds */
-  pointer-events: none; /* Pour ne pas bloquer les clics suivants */
-  transform: translate(-50%, -50%); /* Centrage */
-  
-  /* L'animation utilise les variables CSS générées en JS */
-  animation: explosion 0.6s ease-out forwards;
-  pointer-events: none; /* Indispensable pour ne pas gêner les clics */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    background-color: #38bdf8;
+    /* Couleur par défaut (jaune/orange) */
+    border-radius: 50%;
+    /* Pour avoir des ronds */
+    pointer-events: none;
+    /* Pour ne pas bloquer les clics suivants */
+    transform: translate(-50%, -50%);
+    /* Centrage */
+
+    /* L'animation utilise les variables CSS générées en JS */
+    animation: explosion 0.6s ease-out forwards;
+    pointer-events: none;
+    /* Indispensable pour ne pas gêner les clics */
     z-index: 10;
-    mix-blend-mode: screen; /* Rend les couleurs plus lumineuses sur fond sombre */
+    mix-blend-mode: screen;
+    /* Rend les couleurs plus lumineuses sur fond sombre */
 }
 
 /* Animation clé : la particule part du centre vers les coordonnées --x et --y, en rétrécissant */
 @keyframes explosion {
-  0% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(0);
-    opacity: 0;
-  }
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(0);
+        opacity: 0;
+    }
 }
 
 /* Style du texte de gain (+X) */
 .floating-text {
     position: absolute;
-    color: #ffffff; /* Vert pour l'argent */
+    color: #ffffff;
+    /* Vert pour l'argent */
     font-family: "Orbitron", sans-serif;
     font-size: 24px;
     font-weight: bold;
-    text-shadow: 0 0 8px 8px #38bdf8; /* Lueur néon */
-    pointer-events: none; /* Crucial : empêche le texte de bloquer les clics suivants */
-    z-index: 20; /* S'affiche au-dessus du bouton et des particules */
-    
+    text-shadow: 0 0 8px 8px #38bdf8;
+    /* Lueur néon */
+    pointer-events: none;
+    /* Crucial : empêche le texte de bloquer les clics suivants */
+    z-index: 20;
+    /* S'affiche au-dessus du bouton et des particules */
+
     /* Animation de 0.8 seconde */
     animation: floatUp 0.8s ease-out forwards;
 }
@@ -287,6 +374,7 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
         transform: translate(-50%, -50%) scale(1);
         opacity: 1;
     }
+
     100% {
         /* On le fait monter de 60px (le -60px sur l'axe Y) et grossir un peu */
         transform: translate(-50%, calc(-50% - 60px)) scale(1.2);
@@ -301,9 +389,29 @@ h1,h3,h4,button{font-family: "Rajdhani", sans-serif;}
 
 /* L'animation de tremblement (de gauche à droite) */
 @keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-6px); }
-    50% { transform: translateX(6px); }
-    75% { transform: translateX(-6px); }
-    100% { transform: translateX(0); }
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-6px);
+    }
+
+    50% {
+        transform: translateX(6px);
+    }
+
+    75% {
+        transform: translateX(-6px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.blurred {
+    filter: blur(5px);
+    pointer-events: none; /* Empêche de cliquer sur le contenu flouté */
+    transition: filter 0.3s ease; /* Optionnel : rend l'effet fluide */
 }
