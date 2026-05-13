@@ -21,7 +21,8 @@ var MoneyMultiplier = 1;
 var AdditionCost = 15;
 var MultiplierCost = 500;
 var AdditionIncreaser = 1;
-var AutoMoneyTimer = 1000;
+var AutoMoneyTimer = 1010;
+var AutoMoneyBarTimer = 1.01;
 var AutoMoneyCost = 200;
 var AutoIncome = 0;
 var AdditionLevel = 0;
@@ -30,9 +31,6 @@ var AutomationLevel = 0;
 var TotalMoneyEarned = 0;
 var TotalClicksCount = 0;
 var TotalTimePlayed = 0;
-
-
-// --- SYSTÈME DE SAUVEGARDE ET CHARGEMENT ---
 
 function saveGame() {
     const gameData = {
@@ -48,7 +46,9 @@ function saveGame() {
         AutomationLevel: AutomationLevel,
         TotalClicksCount: TotalClicksCount,
         TotalMoneyEarned: TotalMoneyEarned,
-        TotalTimePlayed: TotalTimePlayed
+        TotalTimePlayed: TotalTimePlayed,
+        AutoMoneyBarTimer: AutoMoneyBarTimer,
+        AutoMoneyTimer: AutoMoneyTimer
     };
     // On convertit l'objet en chaîne de caractères JSON pour le localStorage
     localStorage.setItem('clickerSaveData', JSON.stringify(gameData));
@@ -59,6 +59,7 @@ function loadGame() {
 
     // Si une sauvegarde existe, on met à jour les variables
     if (savedData !== null) {
+        // --- Variables de Progression ---
         if (typeof savedData.Money !== 'undefined') Money = savedData.Money;
         if (typeof savedData.MoneyMultiplier !== 'undefined') MoneyMultiplier = savedData.MoneyMultiplier;
         if (typeof savedData.AdditionCost !== 'undefined') AdditionCost = savedData.AdditionCost;
@@ -69,14 +70,21 @@ function loadGame() {
         if (typeof savedData.AdditionLevel !== 'undefined') AdditionLevel = savedData.AdditionLevel;
         if (typeof savedData.MultiplierLevel !== 'undefined') MultiplierLevel = savedData.MultiplierLevel;
         if (typeof savedData.AutomationLevel !== 'undefined') AutomationLevel = savedData.AutomationLevel;
+
+        // --- Statistiques ---
+        if (typeof savedData.TotalClicksCount !== 'undefined') TotalClicksCount = savedData.TotalClicksCount;
+        if (typeof savedData.TotalMoneyEarned !== 'undefined') TotalMoneyEarned = savedData.TotalMoneyEarned;
+        if (typeof savedData.TotalTimePlayed !== 'undefined') TotalTimePlayed = savedData.TotalTimePlayed;
+
+        // --- Timers de l'Automation ---
+        if (typeof savedData.AutoMoneyBarTimer !== 'undefined') AutoMoneyBarTimer = savedData.AutoMoneyBarTimer;
+        if (typeof savedData.AutoMoneyTimer !== 'undefined') AutoMoneyTimer = savedData.AutoMoneyTimer;
     }
 
+    // On rafraîchit l'interface après le chargement
     UpdateUpgrades();
 }
 
-// --- FIN DU SYSTÈME DE SAUVEGARDE ---
-
-// On crée une variable globale pour stocker notre chronomètre
 let timerPressionBouton; 
 
 button.addEventListener("click", (e) => {
@@ -84,22 +92,32 @@ button.addEventListener("click", (e) => {
     TotalMoneyEarned += MoneyMultiplier;
     UpdateUpgrades();
     TotalClicksCount++;
-    // 1. Gestion de l'état enfoncé (sans clignotement)
+
+    // 1. Gestion de l'état enfoncé
     button.classList.add('is-clicked');
     clearTimeout(timerPressionBouton);
     timerPressionBouton = setTimeout(() => {
         button.classList.remove('is-clicked');
     }, 150); 
 
-    // 2. Coordonnées de la souris
+    // 2. Calcul des coordonnées
     const rect = button.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
+    let clickX, clickY;
 
-    // --- NOUVEAU : Appel de la fonction pour le clic manuel ---
+    if (e.clientX === 0 && e.clientY === 0) {
+        // On place le point de départ pile au milieu du bouton
+        clickX = rect.width / 2;
+        clickY = rect.height / 2;
+    } else {
+        // C'est un vrai clic de souris, on utilise la position précise
+        clickX = e.clientX - rect.left;
+        clickY = e.clientY - rect.top;
+    }
+
+    // 3. Appel des gains flottants (ils utiliseront le centre si c'est au clavier)
     afficherGainFlottant(MoneyMultiplier, clickX, clickY);
 
-    // 4. Génération des Particules
+    // 4. Génération des Particules (elles partiront aussi du centre si c'est au clavier)
     const nbParticules = 15;
     const couleurs = ['#38bdf8', '#e0f2fe', '#0ea5e9', '#0369a1'];
 
@@ -179,21 +197,35 @@ const formatNumber = num => {
 
     const item = lookup.find(item => Math.abs(num) >= item.value);
     return item
-        ? (num / item.value).toFixed(1).replace(/\.0$/, '') + ' ' + item.symbol : num.toString();
+        ? (num / item.value).toFixed(1).replace(/\.0$/, '') + ' ' + item.symbol : num;
 };
 
-AdditionUpgrade.addEventListener("click", () => {
+function AdditionUpgradeFunction() {
     if (Money >= AdditionCost) {
         Money -= AdditionCost;
         MoneyMultiplier += AdditionIncreaser;
-        AdditionCost *= 1.6;
+        AdditionCost *= 1.3;
         AdditionLevel++;
         UpdateUpgrades();
         saveGame(); 
     } else {
         // L'argent est insuffisant, on fait trembler le bouton
         shakeBouton(AdditionUpgrade);
+    }}
+
+window.addEventListener('keydown', (event) => {
+    if (event.key === '&') {
+        AdditionUpgradeFunction();
     }
+    if (event.key === 'a') {
+        Money += 1*10e9;
+        UpdateUpgrades();
+        saveGame(); 
+    }
+});
+
+AdditionUpgrade.addEventListener("click", () => {
+    AdditionUpgradeFunction();
 });
 
 MultiplicationUpgrade.addEventListener("click", () => {
@@ -213,32 +245,53 @@ MultiplicationUpgrade.addEventListener("click", () => {
 AutomationUpgrade.addEventListener("click", () => {
     if (Money >= AutoMoneyCost) {
         Money -= AutoMoneyCost;
-        AutoIncome += AdditionIncreaser;
-        AutoMoneyCost *= 1.8;
+        AutoMoneyTimer -= 10;
+        AutoMoneyBarTimer -= 0.01;
+        AutoMoneyCost *= 1.4;
         AutomationLevel++;
         UpdateUpgrades();
-        saveGame(); 
+        saveGame();
+        
+        // Restart the interval with new speed
+        startAutoMoney();
     } else {
-        shakeBouton(AutomationUpgrade); // L'argent est insuffisant, on fait trembler le bouton
+        shakeBouton(AutomationUpgrade);
     }
 });
 
-let AutoMoney = setInterval(() => {
-    if (AutoIncome > 0) {
-        TotalMoneyEarned += AutoIncome;
-        Money += AutoIncome;
-        UpdateUpgrades();
-        saveGame(); 
-        
-        if (bar) bar.classList.add('animate-run');
+let autoMoneyIntervalId = null;
 
-        // --- NOUVEAU : Calcul du centre du bouton et affichage du gain ---
-        const centreX = button.clientWidth / 2;
-        const centreY = button.clientHeight / 2;
-        
-        afficherGainFlottant(AutoIncome, centreX, centreY);
+function startAutoMoney() {
+    // Clear any existing interval
+    if (autoMoneyIntervalId) {
+        clearInterval(autoMoneyIntervalId);
     }
-}, AutoMoneyTimer);
+    
+    // Start new interval with current timer value
+    autoMoneyIntervalId = setInterval(() => {
+        console.log("AutoMoney tick: " + AutoMoneyTimer);
+        if (AutomationLevel > 0) {
+            TotalMoneyEarned += MoneyMultiplier;
+            Money += MoneyMultiplier;
+            UpdateUpgrades();
+            saveGame(); 
+            
+            if (bar) {
+                bar.classList.add('animate-run');
+                const TimerRefresh = document.querySelector(':root');
+                TimerRefresh.style.setProperty('--animation-speed', AutoMoneyBarTimer + 's');
+            }
+
+            const centreX = button.clientWidth / 2;
+            const centreY = button.clientHeight / 2;
+            
+            afficherGainFlottant(MoneyMultiplier, centreX, centreY);
+        }
+    }, AutoMoneyTimer);
+}
+
+// Start the auto money system
+startAutoMoney();
 
 window.addEventListener('load', () => {
     loadGame(); // Charge les données sauvegardées dès le lancement
@@ -267,6 +320,8 @@ ResetGame.addEventListener('click', () => {
         MultiplierCost = 500;
         AdditionIncreaser = 1;
         AutoMoneyCost = 200;
+        AutoMoneyBarTimer = 1.01;
+        AutoMoneyTimer = 1010;
         AutoIncome = 0;
         AdditionLevel = 0;
         MultiplierLevel = 0;
@@ -276,8 +331,7 @@ ResetGame.addEventListener('click', () => {
         bar.classList.remove('animate-run')
     }
 });
-// --- CRÉATION DU TEXTE FLOTTANT (+X) ---
-    // Fonction pour créer l'animation du texte (+X)
+
 function afficherGainFlottant(montant, x, y) {
     const floatingText = document.createElement('div');
     floatingText.classList.add('floating-text');
@@ -295,7 +349,6 @@ function afficherGainFlottant(montant, x, y) {
         floatingText.remove();
     }, 800);
 }
-    // Fonction pour faire trembler un élément
 function shakeBouton(bouton) {
     bouton.classList.remove('shake-error');
     void bouton.offsetWidth; 

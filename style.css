@@ -19,8 +19,13 @@
 
 }
 
+:root {
+  /* On définit une variable avec une valeur par défaut */
+  --animation-speed: 2s;
+}
+
 .animate-run {
-    animation: fillBar 1s linear infinite;
+    animation: fillBar var(--animation-speed) linear infinite;
 }
 
 @keyframes fillBar {
@@ -31,6 +36,10 @@
     to {
         width: 100%;
     }
+}
+
+button:focus {
+    outline: none; /* Enlève le contour bleu par défaut */
 }
 
 html,
@@ -319,24 +328,14 @@ button {
     width: 16px;
     height: 16px;
     background-color: #38bdf8;
-    /* Couleur par défaut (jaune/orange) */
     border-radius: 50%;
-    /* Pour avoir des ronds */
     pointer-events: none;
-    /* Pour ne pas bloquer les clics suivants */
     transform: translate(-50%, -50%);
-    /* Centrage */
-
-    /* L'animation utilise les variables CSS générées en JS */
     animation: explosion 0.6s ease-out forwards;
     pointer-events: none;
-    /* Indispensable pour ne pas gêner les clics */
     z-index: 10;
     mix-blend-mode: screen;
-    /* Rend les couleurs plus lumineuses sur fond sombre */
 }
-
-/* Animation clé : la particule part du centre vers les coordonnées --x et --y, en rétrécissant */
 @keyframes explosion {
     0% {
         transform: translate(-50%, -50%) scale(1);
@@ -349,62 +348,46 @@ button {
     }
 }
 
-/* Style du texte de gain (+X) */
 .floating-text {
     position: absolute;
     color: #ffffff;
-    /* Vert pour l'argent */
     font-family: "Orbitron", sans-serif;
     font-size: 24px;
     font-weight: bold;
     text-shadow: 0 0 8px 8px #38bdf8;
-    /* Lueur néon */
     pointer-events: none;
-    /* Crucial : empêche le texte de bloquer les clics suivants */
     z-index: 20;
-    /* S'affiche au-dessus du bouton et des particules */
-
-    /* Animation de 0.8 seconde */
     animation: floatUp 0.8s ease-out forwards;
 }
 
-/* L'animation : le texte monte et devient transparent */
 @keyframes floatUp {
     0% {
         transform: translate(-50%, -50%) scale(1);
         opacity: 1;
     }
-
-    100% {
-        /* On le fait monter de 60px (le -60px sur l'axe Y) et grossir un peu */
+    100% {  /* On le fait monter de 60px (le -60px sur l'axe Y) et grossir un peu */
         transform: translate(-50%, calc(-50% - 60px)) scale(1.2);
         opacity: 0.5;
     }
 }
 
-/* La classe qui sera ajoutée temporairement par le JS */
 .shake-error {
     animation: shake 0.3s ease-in-out;
 }
 
-/* L'animation de tremblement (de gauche à droite) */
 @keyframes shake {
     0% {
         transform: translateX(0);
     }
-
     25% {
         transform: translateX(-6px);
     }
-
     50% {
         transform: translateX(6px);
     }
-
     75% {
         transform: translateX(-6px);
     }
-
     100% {
         transform: translateX(0);
     }
